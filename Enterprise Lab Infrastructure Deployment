@@ -1,0 +1,87 @@
+GitHub Portfolio Project: Enterprise Lab Infrastructure Deployment
+📌 Project Overview
+This project documents the end-to-end deployment of a localized enterprise environment. It involves the virtualization of a Windows Server 2022 Domain Controller and a Windows 11 Pro workstation, culminating in a fully integrated Active Directory Forest.
+
+🛠️ Tech Stack
+Hypervisor: Oracle VM VirtualBox 7.x
+
+Server OS: Windows Server 2022 Standard (Desktop Experience)
+
+Client OS: Windows 11 Pro (Upgraded from Home SKU)
+
+Services: Active Directory Domain Services (AD DS), DNS, IPv4 Networking
+
+📂 Phase 1: Virtualization & Hardware Abstraction
+Objective: Establish the virtual hardware foundation for the lab.
+1. Virtual Machine Provisioning:
+
+Allocated 4GB RAM / 2 vCPUs for both Server and Client nodes.
+
+Troubleshooting (Critical): Resolved VERR_VMX_MSR_ALL_VMX_DISABLED by enabling Intel Virtualization Technology (VT-x) in the host BIOS.
+
+2. Optimization:
+
+Installed VirtualBox Guest Additions on both nodes to enable WDDM graphics drivers and bidirectional clipboard functionality.
+
+🌐 Phase 2: Networking & Infrastructure (The Dual-Homed Server)
+Objective: Configure a secure, isolated network with internet reach-back.
+1. Network Architecture:
+
+Adapter 1 (Host-Only): Private LAN for internal Domain traffic (172.16.0.0/24).
+
+Adapter 2 (NAT): External WAN access for updates and DNS forwarding.
+
+2. Static IP Configuration:
+
+Manually assigned 172.16.0.1 to the Domain Controller.
+
+NCSI Troubleshooting: Resolved a "No Internet" taskbar glitch by adjusting Interface Metrics to prioritize the NAT gateway over the Host-Only adapter.
+
+🏛️ Phase 3: Active Directory Domain Services (AD DS)
+Objective: Establish the Forest Root and Identity Authority.
+1. Server Promotion:
+
+Promoted LAB-DC-01 to a Domain Controller for the [YourDomain].local forest.
+
+Configured DNS Forwarders (8.8.8.8) to allow internal clients to resolve external web addresses.
+
+2. Directory Structure (OU Design):
+
+Created a logical hierarchy to mimic a corporate environment:
+
+LAB_ACCOUNTS: For user identity management.
+
+LAB_GROUPS: For security group nesting and GPO application.
+
+💻 Phase 4: Client Integration & SKU Management
+Objective: Successfully join a modern workstation to the domain.
+1. SKU Upgrade (Home to Pro):
+
+Issue: Windows 11 Home does not support Domain Joins.
+
+Solution: Performed an in-place upgrade to Windows 11 Pro using a generic configuration key to unlock enterprise networking features.
+
+2. The Domain Join:
+
+Pointed Client DNS to 172.16.0.1.
+
+Successfully joined Win11VM_1 to the domain.
+
+Verification: Confirmed the new computer object appeared in the Computers container in ADUC.
+
+📊 Verification & SOP (Standard Operating Procedure)
+How to Verify System Health:
+Identity: Run whoami on the workstation to confirm DOMAIN\User context.
+
+Connectivity: Run nslookup to ensure the DC is resolving the domain name.
+
+Authentication: Log in with a newly created user from the LAB_ACCOUNTS OU to verify roaming profile creation.
+
+🧠 Key Competencies Gained
+Systems Administration: Managing Server Roles and AD DS lifecycle.
+
+Network Engineering: Implementing Static IP schemas and Dual-NIC routing.
+
+Troubleshooting: Root-cause analysis for BIOS, Licensing, and DNS conflicts.
+
+Technical Writing: Developing professional documentation for a GitHub portfolio.
